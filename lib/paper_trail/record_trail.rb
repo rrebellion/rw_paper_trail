@@ -240,6 +240,10 @@ module PaperTrail
       # instead of `merge`.
       data.merge!(data_for_update)
 
+      # Skip version if object_changes_adapter produced no meaningful diff.
+      object_changes = data[:object_changes]
+      return if object_changes.blank? || object_changes == "{}" || object_changes == "[]"
+
       # Using `version_class.new` reduces memory usage compared to
       # `versions_assoc.build`. It's a trade-off though. We have to clear
       # the association cache (see `versions.reset`) and that could cause an
